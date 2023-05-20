@@ -32,7 +32,8 @@ struct WiFiCredentialsData{
 // WifiList {data} (2)
 //********************************
 struct WifiListData{
-  struct WiFiCredentialsData SSIDs[]; // extructura de redes
+  int foundNetworks;
+  struct WiFiCredentialsData * SSIDs; // extructura de redes
   String ActualWiFiConnected = "none!!!";     // es "none!!!" si no esta conectado
 };
 
@@ -46,17 +47,17 @@ struct timestampData{
 // nodeList {data} (9)
 //********************************
 struct nodeListData{
-  int nodesID[];
-  float nodesSignalStrength[];
-  int accessNode[];                // podria dar problemas si un nodo tiene mas de una conexion
+  int * nodesID;
+  float  * nodesSignalStrength;
+  int * accessNode;                // podria dar problemas si un nodo tiene mas de una conexion
 };
 
 // ConnectionsChanged {data} (21)
 //********************************
 struct ConnectionsChangedData{
-  int nodesID[];
-  float nodesSignalStrength[];
-  int accessNode[];                // podria dar problemas si un nodo tiene mas de una conexion
+  int * nodesID;
+  float * nodesSignalStrength;
+  int * accessNode;                // podria dar problemas si un nodo tiene mas de una conexion
 };
 
 // SensorCalibration {data} (10)
@@ -101,11 +102,11 @@ struct AlarmGotActivatedData{
 struct FilterScheduleData{
   int nodeID;
   int filterID;
-  bool state[];   // [] por definir
-  int retro1[];   // [] por definir
-  int retro2[];   // [] por definir
-  int retro3[];   // [] por definir
-  int retro4[];   // [] por definir
+  bool * state;   // [] por definir. Para evitar errores, hay que usar punteros para los arrays. No usar []
+  int * retro1;   // [] por definir
+  int * retro2;   // [] por definir
+  int * retro3;   // [] por definir
+  int * retro4;   // [] por definir
 };
 
 // ConfigDispType1 {data} (38)

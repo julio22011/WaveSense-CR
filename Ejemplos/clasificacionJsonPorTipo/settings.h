@@ -5,7 +5,8 @@
 
 // Definir el tipo de dispositivo
 //*******************************************
-//#define isHMI
+// Los siguientes define permiten establecer que tipo de dispositivo es, un HMI o un NET. Solamente activar uno de los dos.
+#define isHMI
 //#define isNET
 
 // Textos

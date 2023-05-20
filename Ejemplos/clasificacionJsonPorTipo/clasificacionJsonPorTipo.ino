@@ -2,10 +2,6 @@
  * Programa para probar la clasificacion de json por tipos
 */
 
-// Los siguientes define permiten establecer que tipo de dispositivo es, un HMI o un NET. Solamente activar uno de los dos.
-#define isHMI
-//#define isNET
-
 #include <ArduinoJson.h>
 
 #include "comunicationProtocolTypes.h"
@@ -27,7 +23,7 @@ void setup() {
 void loop() {
   struct datosProcesados datos = procesar_mensaje(ejemplo_json);
 
-  imprimirPorSerialResultado(&datos);
+  imprimirPorSerialEtiqueta(&datos);
   
   delay(3000);
 }

@@ -11,7 +11,7 @@
 // Requests
 //****************************************************************
 
-struct datosProcesados* getRequest(DynamicJsonDocument * doc, struct datosProcesados* datos){
+struct datosProcesados* getRequest(DynamicJsonDocument doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los comandos son opuestos, el receptor recibe los commands del emisor
@@ -41,7 +41,7 @@ struct datosProcesados* getRequest(DynamicJsonDocument * doc, struct datosProces
 // Answers
 //****************************************************************
 
-struct datosProcesados* getAnswer(DynamicJsonDocument * doc, struct datosProcesados* datos){
+struct datosProcesados* getAnswer(DynamicJsonDocument doc, struct datosProcesados* datos){
   int answer = datos->etiqueta.answer;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor
@@ -97,7 +97,7 @@ struct datosProcesados* getAnswer(DynamicJsonDocument * doc, struct datosProcesa
 // Update
 //****************************************************************
 
-struct datosProcesados* getUpdate(DynamicJsonDocument * doc, struct datosProcesados* datos){
+struct datosProcesados* getUpdate(DynamicJsonDocument doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor
@@ -129,7 +129,7 @@ struct datosProcesados* getUpdate(DynamicJsonDocument * doc, struct datosProcesa
 // Datos
 //****************************************************************
 
-struct datosProcesados* getData(DynamicJsonDocument * doc, struct datosProcesados* datos){
+struct datosProcesados* getData(DynamicJsonDocument doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor
