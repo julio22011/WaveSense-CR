@@ -12,7 +12,6 @@
 
 #include "estructuras.h"         // Aqui estan las estructuras de los datos
 #include "enums.h"               // Aqui estan los codigos de mensaje
-#include "formatosDeCommands.h"  // Aqui estan las extructuras que permiten almacenar los datos recibidos
 
 
 // Para imprimir por serial el resultado del procesado
