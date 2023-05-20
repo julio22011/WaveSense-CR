@@ -1,0 +1,1 @@
+Estos son los códigos para los distintos dispositivos del proyecto WaveSense-CR
