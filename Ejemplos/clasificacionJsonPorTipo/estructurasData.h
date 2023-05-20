@@ -3,7 +3,7 @@
  * Definicion de las formatos(cajas) para almacenar los datos que vienen de los comandos
 */
 
-// Lista de formatos
+// Lista de formatos con {data}
 //********************************
 // WiFiCredentials {data} (3)
 // WifiList {data} (2)
@@ -101,11 +101,11 @@ struct AlarmGotActivatedData{
 struct FilterScheduleData{
   int nodeID;
   int filterID;
-  bool state[4];   // [] por definir
-  int retro1[4];   // [] por definir
-  int retro2[4];   // [] por definir
-  int retro3[4];   // [] por definir
-  int retro4[4];   // [] por definir
+  bool state[];   // [] por definir
+  int retro1[];   // [] por definir
+  int retro2[];   // [] por definir
+  int retro3[];   // [] por definir
+  int retro4[];   // [] por definir
 };
 
 // ConfigDispType1 {data} (38)

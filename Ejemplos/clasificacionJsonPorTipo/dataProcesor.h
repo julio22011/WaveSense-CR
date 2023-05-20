@@ -6,11 +6,12 @@
  * 
 */
 
+#include "dataDistribution.h"
 
 // Requests
 //****************************************************************
 
-struct datosProcesados* getRequest(struct datosProcesados* datos){
+struct datosProcesados* getRequest(DynamicJsonDocument * doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los comandos son opuestos, el receptor recibe los commands del emisor
@@ -40,14 +41,14 @@ struct datosProcesados* getRequest(struct datosProcesados* datos){
 // Answers
 //****************************************************************
 
-struct datosProcesados* getAnswer(struct datosProcesados* datos){
+struct datosProcesados* getAnswer(DynamicJsonDocument * doc, struct datosProcesados* datos){
   int answer = datos->etiqueta.answer;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor
   
   #ifdef isHMI
   switch (answer){
-    case WifiList:                break;
+    case WifiList:                WifiListSave(doc, datos); break;
     case newWiFiCredOk:           break;
     case timestamp:               break;
     case noTimeError:             break;
@@ -96,7 +97,7 @@ struct datosProcesados* getAnswer(struct datosProcesados* datos){
 // Update
 //****************************************************************
 
-struct datosProcesados* getUpdate(struct datosProcesados* datos){
+struct datosProcesados* getUpdate(DynamicJsonDocument * doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor
@@ -128,7 +129,7 @@ struct datosProcesados* getUpdate(struct datosProcesados* datos){
 // Datos
 //****************************************************************
 
-struct datosProcesados* getData(struct datosProcesados* datos){
+struct datosProcesados* getData(DynamicJsonDocument * doc, struct datosProcesados* datos){
   int command = datos->etiqueta.command;
 
   // Nota: Los answers son opuestos, el receptor recibe los commands del emisor

@@ -11,5 +11,10 @@
 // Textos
 //*******************************************
 
+
+// Tamano de buffers y otros
+//*******************************************
+#define ssidBufferSize 20    // cantidad de redes que se pueden recibir/enviar
+
 // m...
 //*******************************************

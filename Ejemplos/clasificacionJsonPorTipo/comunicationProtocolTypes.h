@@ -10,6 +10,7 @@
 //#define isHMI
 //#define isNET
 
+#include "settings.h"
 #include "estructuras.h"         // Aqui estan las estructuras de los datos
 #include "enums.h"               // Aqui estan los codigos de mensaje
 
@@ -121,10 +122,10 @@ struct datosProcesados extraerDatosDeJson(DynamicJsonDocument * doc, struct etiq
   
   // Analizar etiqueta
   switch (etiq.type) {
-    case r: getRequest(&datos); break;
-    case a: getAnswer(&datos);  break;
-    case u: getUpdate(&datos);  break;
-    case d: getData(&datos);    break;
+    case r: getRequest(doc, &datos); break;
+    case a: getAnswer(doc, &datos);  break;
+    case u: getUpdate(doc, &datos);  break;
+    case d: getData(doc, &datos);    break;
     default:                    datos.error = true; break;
   }
 
