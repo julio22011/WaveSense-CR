@@ -8,10 +8,9 @@
 #ifdef isHMI
 
 // Guardado de Answers
-//****************************************************************
-struct datosProcesados* WifiListSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
 
-  // Nota: falta usar el json para definir valores
+struct datosProcesados* WifiListSave(DynamicJsonDocument doc, struct datosProcesados* datos){
 
   // Obtener los datos del json
   //-------------------------------------------------
@@ -41,21 +40,53 @@ struct datosProcesados* WifiListSave(DynamicJsonDocument doc, struct datosProces
   //-------------------------------------------------
   datos->WifiListData.foundNetworks = n;
   datos->WifiListData.ActualWiFiConnected = ActualWiFiConnected;
-  datos->WifiListData.SSIDs = SSIDs;
+  datos->WifiListData.SSIDs = SSIDs; // asigna todo de las distintas redes: SSIDs, contrasenas, senales
 
   // Retornar resultado
   //-------------------------------------------------
   return datos;
 }
 
+struct datosProcesados* timestampSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+
+  // Obtener los datos del json
+  //-------------------------------------------------
+  long int timestampSec = doc["timestampSec"].as<long int>();
+  long int timestampMiliSec = doc["timestampMiliSec"].as<long int>();
+
+  // Crear estructura para almacenar el nuevo timestamp
+  //-------------------------------------------------
+  datos->timestampData.timestampNumberSeconds = timestampSec;
+  datos->timestampData.timestampNumberMiliSeconds = timestampMiliSec;
+
+  // Retornar resultado
+  //-------------------------------------------------
+  return datos;
+}
+
+struct datosProcesados* nodeListSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
 
 // Guardado de Update
-//****************************************************************
-
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+struct datosProcesados* ConnectionsChangedSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
 
 // Guardado de  Datos
-//****************************************************************
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+struct datosProcesados* MsgPlatformSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
 
+struct datosProcesados* alarmGotActivatedSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* NewDataSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
 
 #endif
 
@@ -67,13 +98,41 @@ struct datosProcesados* WifiListSave(DynamicJsonDocument doc, struct datosProces
 #ifdef isNET
 
 // Answers
-//****************************************************************
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+// (no hay nada en el protocolo)
 
 // Update
-//****************************************************************
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+struct datosProcesados* WiFiCredentialsSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* SensorCalibrationSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* PlatformCredentialsSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* AlarmLimitsSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* FilterScheduleSave(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* ConfigDispType1Save(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
+
+struct datosProcesados* ConfigDispType23Save(DynamicJsonDocument doc, struct datosProcesados* datos){
+  //
+}
 
 // Datos
-//****************************************************************
-
+//8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8-8
+// (no hay nada en el protocolo)
 
 #endif

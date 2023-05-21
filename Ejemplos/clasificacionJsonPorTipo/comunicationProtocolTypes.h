@@ -74,7 +74,7 @@ struct datosProcesados extraerDatosDeJson(DynamicJsonDocument doc, struct etique
     case a: getAnswer(doc, &datos);  break;
     case u: getUpdate(doc, &datos);  break;
     case d: getData(doc, &datos);    break;
-    default:                    datos.error = true; break;
+    default:                         datos.error = true; break;
   }
 
   return datos;

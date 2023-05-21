@@ -1,0 +1,3 @@
+/*
+ * En este archivo se define el sistema permite generar las respuestas...
+*/
