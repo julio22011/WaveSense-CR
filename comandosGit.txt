@@ -11,3 +11,14 @@ git commit -m "..."
 
 // Subir a GitHub los cambios
 git push --set-upstream origin master
+
+// Crear un archivo
+touch ejemplo.h
+
+//---------------------------------------
+
+https://www.neonscience.org/resources/learning-hub/tutorials/git-setup-remote
+
+git pull upstream master  // pull down any changes and sync the local repo with the central repo
+
+git push origin master    // push your changes up to your fork

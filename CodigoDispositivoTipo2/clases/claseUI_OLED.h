@@ -165,6 +165,8 @@ bool UI_OLED::mostrarLecturasSensores(sensor *sensores, int cantSensores){ // St
     display.setTextSize(1);             // Normal 1:1 pixel scale
     display.setTextColor(SSD1306_WHITE);        // Draw white text
     display.setCursor(0,8);
+    display.println("Lecturas 2");
+    display.println("------------");
     for(int i = 5; i < cantSensores; i++){
       display.print(sensores[i].parametro + ": ");
       display.print(sensores[i].devolverParametroFisico());  // Devulve el valor
