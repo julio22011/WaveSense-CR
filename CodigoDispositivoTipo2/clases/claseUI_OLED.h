@@ -151,12 +151,28 @@ bool UI_OLED::mostrarLecturasSensores(sensor *sensores, int cantSensores){ // St
   //int cantSensores = sizeof(sensores)/sizeof(sensor); // Determina cuantos sensores son
   display.println("Lecturas");
   display.println("------------");
-  for(int i = 0; i < cantSensores; i++){
+  for(int i = 0; i < 5; i++){  //cantSensores
     display.print(sensores[i].parametro + ": ");
     display.print(sensores[i].devolverParametroFisico());  // Devulve el valor
     display.println(" " + sensores[i].devolverUnidadesFisicas());
   }
   display.display();
+  
+  // Si son mas de 4 sensores:
+  if (cantSensores > 5){
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    display.clearDisplay();             // Borra el buffer de la pantalla
+    display.setTextSize(1);             // Normal 1:1 pixel scale
+    display.setTextColor(SSD1306_WHITE);        // Draw white text
+    display.setCursor(0,8);
+    for(int i = 5; i < cantSensores; i++){
+      display.print(sensores[i].parametro + ": ");
+      display.print(sensores[i].devolverParametroFisico());  // Devulve el valor
+      display.println(" " + sensores[i].devolverUnidadesFisicas());
+    }
+    display.display();
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
 }
 
 bool UI_OLED::mostrarVoltajesSensores(sensor *sensores, int cantSensores){ // String *nombreSensores, float * lecturas

@@ -21,6 +21,7 @@
 #define sensorConductividad 3
 #define sensorTurbidez      4
 #define sensorTDS           5
+#define sensorPres          6
 
 //*****************************************************************************************************************
 #include "requeridoPorClaseSensor.h"
@@ -91,6 +92,7 @@ class sensor{
   float calcularConductividad();
   float calcularTurbidez();
   float calcularTDS();
+  float calcularPresion();
   float determinarTemperatura();
 
 }; // fin de la clase
@@ -143,6 +145,16 @@ bool sensor::inicializar(int id, String param,uint8_t tipoDeSens, int pinDeConex
       limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
       break;
     case sensorTDS:
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
+      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
+      limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
+      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 3.0); 
+      limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
+      break;
+
+    // Hay que arreglar los datos del sensor de presion y agregar el caudalimetro
+    case sensorPres:
       valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
       valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
       valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
@@ -247,6 +259,11 @@ int sensor::devolverLecturaDigital(){
       case sensorTDS:
         lecturaDigital = analogRead(pinDeConexion);
         break;
+
+      // Falta agregar caudalimetro
+      case sensorPres:
+        lecturaDigital = analogRead(pinDeConexion);
+        break;
       default: return -1;  // retorna un -1 como indicativo de error
     }
     return lecturaDigital;  // retorna el valor correspondiente
@@ -258,7 +275,7 @@ float sensor::devolverVoltaje(){
   // Devuelve el valor de voltaje medido
   if (tipoDeSensor == sensorTemp) return 0;                           // Retorna 0 ya que este tipo de sensor no usa voltaje
   if(usaADC){
-    return ads->computeVolts(devolverLecturaDigital());
+    return ads->computeVolts(devolverLecturaDigital());               // Usa la libreria para convertir la lectura digital a un valor de voltaje
   } else{
     return (voltajeMaximoADC/valorMaximoADC)*devolverLecturaDigital();  // Calcula el valor de voltaje para lo sensores analogicos de voltaje
   }
@@ -293,6 +310,12 @@ float sensor::devolverParametroFisico(){
         lectura = calcularTDS();
         return lectura;
         break;
+
+      // Falta agregar caudalimetro
+      case sensorPres:
+        lectura = calcularPresion();
+        return lectura;
+        break;
       default: return -1;  // retorna un -1 como indicativo de error
     }
 }
@@ -314,6 +337,11 @@ String sensor::devolverUnidadesFisicas(){
         break;
       case sensorTDS:
         return "PPM";  // ppm = mg/L
+        break;
+
+      // Falta agregar cuadalimetro
+      case sensorPres:
+        return "kPa";  // ppm = mg/L
         break;
       default: return "ErrorUnits";  // retorna un -1 como indicativo de error
     }
@@ -375,6 +403,17 @@ float sensor::calcularTDS(){    // ppm = mg/L
   float tdsValue=(valorCalibracion*compensationVolatge*compensationVolatge*compensationVolatge - valorCalibracion2*compensationVolatge*compensationVolatge + valorCalibracion3*compensationVolatge)*0.5; //convert voltage value to tds value
   return tdsValue; // Ecuacion de calculo, ver https://wiki.keyestudio.com/KS0429_keyestudio_TDS_Meter_V1.0 0 de Adafruit: https://wiki.dfrobot.com/Gravity__Analog_TDS_Sensor___Meter_For_Arduino_SKU__SEN0244?gclid=Cj0KCQjwyOuYBhCGARIsAIdGQRMgMxuTeanS11vlUkTR3qVN1pbd9SH3OY62YQM74d27H5HHReZX5bsaAg-xEALw_wcB
 }
+
+float sensor::calcularPresion(){
+  // Funcion que devuelve el valor de turbidez
+  voltaje = devolverVoltaje();
+  corriente = devolverCorriente();
+  float presion = valorCalibracion*voltaje + valorCalibracion2;  // similar a map con ecuacion lineal
+  return presion;
+
+  //return valorCalibracion*square(voltaje+1.3)+valorCalibracion2*(voltaje+1.3)+valorCalibracion3;   // Ecuacion de calculo, ver https://ecuarobot.com/2021/03/24/medicion-de-la-turbidez-del-agua-para-determinar-la-calidad-del-agua-mediante-arduino-y-el-sensor-de-turbidez/
+}   
+
 
 float sensor::determinarTemperatura(){
   if (!errorEnTemperatura){

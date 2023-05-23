@@ -23,16 +23,14 @@ Scheduler userScheduler; // Para la controlar las tareas
 painlessMesh  mesh;
 
 // Para los filtros:
-filtro filtro1; // crear objeto tipo filtro
-filtro filtro2; // crear objeto tipo filtro
-filtro filtro3; // crear objeto tipo filtro
+filtro filtro1, filtro2, filtro3; // crear objetos tipo filtro
 
 filtro todosLosFiltros[] = {filtro1, filtro2, filtro3};  // crea un array de filtros
 int cantidadDeFiltros = sizeof(todosLosFiltros)/sizeof(filtro);
 
 // Para los sensores
-sensor sTemperatura, sPH, sConductividad, sTurbidez, sTDS;
-sensor todosLosSensores[] = {sTemperatura, sPH, sConductividad, sTurbidez, sTDS}; // crear vector con todos los sensores
+sensor sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion;
+sensor todosLosSensores[] = {sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion}; // crear vector con todos los sensores
 int cantidadDeSensores = sizeof(todosLosSensores)/sizeof(sensor);
 
 // Para la ui de la pantalla:
@@ -131,7 +129,8 @@ void crearUI(){
   String titulosMenuSecundario[] = {
     "Reinicio",
     "Tipo de conexion",
-    "Mostrar voltajes"};
+    "Mostrar voltajes",
+    "Informacion"};
   int numDeOpcionesSec = (sizeof(titulosMenuSecundario)/sizeof(titulosMenuSecundario[0])); // determinar la cantidad de elementos
   menuSecundario.configurarMenu(1, numDeOpcionesSec, "Menu 2", titulosMenuSecundario);
   //menuSecundario.imprimirOpcionesEnSerial();  // funcion de depuracion
@@ -146,19 +145,21 @@ void crearUI(){
   ui.asociarBotones(botones);
 
   // Mostrar menu:
-  //ui.mostrarMenuEnOLED(menuPrincipal); // para probar, se debe cambiar por ui.update(); en la tarea que la ejecuta
+  //ui.mostrarMenuEnOLED(menuPrincipal);  // para probar, se debe cambiar por ui.update(); en la tarea que la ejecuta
   ui.mostrarMensaje("Bienvenido");        // Prueba de enviar un mensaje
-  vTaskDelay(pdMS_TO_TICKS(1000));  // Esperar para no borrar el mensaje y poder verlo
+  vTaskDelay(pdMS_TO_TICKS(1000));        // Esperar para no borrar el mensaje y poder verlo
 }
 
 void setupDeSensores(){
   // Inciar los sensores:
-  IDdelDispositivo = mesh.getNodeId();  // obtener el chipid
+  IDdelDispositivo = mesh.getNodeId();                                                                       // obtener el chipid
   todosLosSensores[0].inicializar(IDdelDispositivo, "Temp", sensorTemp, pin_Temp, false);                    // false, no utiliza ADC
   todosLosSensores[1].inicializar(IDdelDispositivo, "pH", sensorPH, pinADC_pH, true, &ads1);
   todosLosSensores[2].inicializar(IDdelDispositivo, "Cond", sensorConductividad, pinADC_Cond, true, &ads1);
   todosLosSensores[3].inicializar(IDdelDispositivo, "Turb", sensorTurbidez, pinADC_Turb, true, &ads1);
-  todosLosSensores[4].inicializar(IDdelDispositivo, "TDS", sensorTDS, pinADC_TDS, true, &ads1);                           // usa el mismo sensor de conductividad
+  todosLosSensores[4].inicializar(IDdelDispositivo, "TDS", sensorTDS, pinADC_TDS, true, &ads1);              // usa el mismo sensor de conductividad
+  
+  todosLosSensores[5].inicializar(IDdelDispositivo, "Pres", sensorPres, pinADC_Pres, true, &ads1);           // Sensor de presion
 }
 
 bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){

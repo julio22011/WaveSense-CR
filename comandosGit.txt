@@ -1,0 +1,13 @@
+
+
+// Anadir todos los cambios
+git add .
+
+// Anadir uno o varios archivos solamente
+git add ejemplo.h, hola.h
+
+// Registrar cambios
+git commit -m "..."
+
+// Subir a GitHub los cambios
+git push --set-upstream origin master

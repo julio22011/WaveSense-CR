@@ -70,6 +70,7 @@ int pinBuzzer = 12;
 #define pinADC_Cond 1    // Pin del ADC
 #define pinADC_TDS  1    // Pin del ADC
 #define pinADC_Turb 0    // Pin del ADC
+#define pinADC_Pres 3    // Pin del ADC
 #define pin_Temp    15   // Pin del microcontrolador
 
 //=====================================================================

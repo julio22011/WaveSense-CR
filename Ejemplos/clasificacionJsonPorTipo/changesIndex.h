@@ -10,5 +10,5 @@ bool pendientChanges = false;
 
 // Matriz de banderas (bool para cada estructura)
 //-------------------------------------------
-bool * flagsMatriz;
+bool * flagsMatrizCommands;
 //...
