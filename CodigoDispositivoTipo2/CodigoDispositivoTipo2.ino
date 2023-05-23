@@ -128,8 +128,9 @@ void crearUI(){
   // Para los menus secundarios:
   String titulosMenuSecundario[] = {
     "Reinicio",
-    "Tipo de conexion",
     "Mostrar voltajes",
+    "Tipo de conexion",
+    "Modo solitario",
     "Informacion"};
   int numDeOpcionesSec = (sizeof(titulosMenuSecundario)/sizeof(titulosMenuSecundario[0])); // determinar la cantidad de elementos
   menuSecundario.configurarMenu(1, numDeOpcionesSec, "Menu 2", titulosMenuSecundario);
@@ -143,12 +144,20 @@ void crearUI(){
   // Configurar botones:
   botones.iniciar(pinDeLosBotones, tipoBotonesDisp, limitesDeLect, pinTransistor); // int pin = 36, uint8_t tipo = 0, int *limitesDeLectura = NULL
   ui.asociarBotones(botones);
+  //attachInterrupt(digitalPinToInterrupt(ui.botonesUI.pinBotones), handleInterrupt, CHANGE); // agregar una rutina de interrupcion a los botones. No funciono
 
   // Mostrar menu:
   //ui.mostrarMenuEnOLED(menuPrincipal);  // para probar, se debe cambiar por ui.update(); en la tarea que la ejecuta
   ui.mostrarMensaje("Bienvenido");        // Prueba de enviar un mensaje
   vTaskDelay(pdMS_TO_TICKS(1000));        // Esperar para no borrar el mensaje y poder verlo
 }
+
+/* No funciono bien con los botones
+// Funcion para manejar las ISR de los botones
+void handleInterrupt(){
+  ui.handleInterruptUI();
+}
+*/
 
 void setupDeSensores(){
   // Inciar los sensores:

@@ -22,6 +22,7 @@
 #define sensorTurbidez      4
 #define sensorTDS           5
 #define sensorPres          6
+#define sensorCaudal        7
 
 //*****************************************************************************************************************
 #include "requeridoPorClaseSensor.h"

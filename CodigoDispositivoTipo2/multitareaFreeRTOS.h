@@ -84,7 +84,7 @@ void mostrarEstadoDeRetroEnUI(){
   }
 }
 
-void tareaUI(void * parameters){
+void IRAM_ATTR tareaUI(void * parameters){
   // Tarea que mantiene funcionando el UI de la OLED
   while(true){
     ui.update();
@@ -126,6 +126,7 @@ JsonObject generarJsonDatosRutinarios(){
     mensaje[buffer] = todosLosFiltros[i].falloMotor;
   }
 */
+
   // Anadir los datos de todos los filtros
   mensaje["Fitro1_etapa"] = todosLosFiltros[0].etapa;
   mensaje["Fitro2_etapa"] = todosLosFiltros[1].etapa;
@@ -176,8 +177,10 @@ void tareaEnviarDatos(void * parameters){
     JsonObject resultadoJsonPru = generarJsonDatosRutinarios();               // prueba con paquete general rutinario
     String mensaje;
     serializeJson(resultadoJsonPru, mensaje);
+    ui.mostrarMensaje("Enviando datos");       // indicar en la ui que se esta enviando un mensaje por mesh
     mesh.sendBroadcast( mensaje );
-
+    ui.cambioPendiente = true;                 // volver a dibujar el menu de la ui
+    
     //mesh.sendBroadcast( "Hola" );    
     //taskSendMessage.setInterval( random( TASK_SECOND * 1, TASK_SECOND * 3 )); // Establece un intervalo aleatorio de tiempo (cambiado por vTaskDelay())
     vTaskDelay(pdMS_TO_TICKS(msDeMensajeRutinario));
@@ -207,7 +210,7 @@ void iniciarUI(int stack) {    //  stack> 1000
     "UI-OLED",    // Name of the task (for debugging) // 5000
     stack,               // Stack size (bytes)
     NULL,               // Parameter to pass
-    3,                  // Task priority, mientras mas pequeno...
+    1,                  // 3 Task priority, mientras mas pequeno...
     NULL,                // Task handle, NULL si no tiene
     1                    // Nucleo en el que corre
   );

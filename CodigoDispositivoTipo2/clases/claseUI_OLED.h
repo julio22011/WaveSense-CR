@@ -61,6 +61,7 @@ class UI_OLED {
   bool mostrarMenuEnOLED(menu menuPorMostrar);
   bool asociarPantalla(Adafruit_SSD1306 displayPorAsociar);
   bool asociarBotones(botones _botones);
+  void handleInterruptUI();
   bool asociarMenu(int numMenus, menu *menusPorAsociar);
   bool imprimirTitulosDeMenusSerial();
   bool setupPantallaOled(int I2C_SDA, int I2C_SCL);
@@ -94,6 +95,12 @@ bool UI_OLED::asociarPantalla(Adafruit_SSD1306 displayPorAsociar){
 bool UI_OLED::asociarBotones(botones _botones){
   // Esta funcion vincula los botones con la UI
   botonesUI = _botones;
+}
+
+// Funcion ISR para manejar las interrupciones de los botones
+void UI_OLED::handleInterruptUI() {
+  // Código a ejecutar cuando se produce la interrupción
+  Serial.println("ISR: Boton presionado.");
 }
 
 bool UI_OLED::imprimirTitulosDeMenusSerial(){
@@ -207,7 +214,7 @@ bool UI_OLED::mostrarMensaje(String mensaje){
 }
 
 // if algo cambia, actualizar pantalla
-bool UI_OLED::update(){
+bool IRAM_ATTR UI_OLED::update(){
   char botonPresionado = botonesUI.botonPresionado();  // Varible para recibir el boton presionado
   if (botonPresionado != '0'){ // si se presiona un boton, verifica cual fue
     if(botonPresionado == '1'){
