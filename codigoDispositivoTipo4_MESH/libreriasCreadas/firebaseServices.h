@@ -172,8 +172,11 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
       json.set("temp", (float) ultimoJsonRecibido["Temp"]);
       json.set("ph",   (float) ultimoJsonRecibido["pH"]); 
       json.set("cond", (float) ultimoJsonRecibido["Cond"]);
-      json.set("tds",  (float) ultimoJsonRecibido["Turb"]);
+      json.set("turb",  (float) ultimoJsonRecibido["Turb"]);
       json.set("tds",  (float) ultimoJsonRecibido["TDS"]);
+
+      json.set("pres",  (float) ultimoJsonRecibido["Pres"]);
+      json.set("caud",  (float) ultimoJsonRecibido["Caud"]);
       
       // now we will set the timestamp value at Ts
       json.set("timeAt/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value

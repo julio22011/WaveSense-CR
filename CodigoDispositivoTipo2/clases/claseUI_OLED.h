@@ -240,7 +240,6 @@ bool IRAM_ATTR UI_OLED::update(){
     mostrarMensaje(mensajeEsporadico);
     vTaskDelay(pdMS_TO_TICKS(2000));
     mensajePendiente = false;    // Elimina el pendiente
-    
   }
   if(cambioPendiente){
     // Actualiza pantalla si se hace alguna modificacion afuera que requiera un refresco

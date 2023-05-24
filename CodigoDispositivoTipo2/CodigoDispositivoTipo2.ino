@@ -29,8 +29,8 @@ filtro todosLosFiltros[] = {filtro1, filtro2, filtro3};  // crea un array de fil
 int cantidadDeFiltros = sizeof(todosLosFiltros)/sizeof(filtro);
 
 // Para los sensores
-sensor sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion;
-sensor todosLosSensores[] = {sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion}; // crear vector con todos los sensores
+sensor sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion, sCaudal;
+sensor todosLosSensores[] = {sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion, sCaudal}; // crear vector con todos los sensores
 int cantidadDeSensores = sizeof(todosLosSensores)/sizeof(sensor);
 
 // Para la ui de la pantalla:
@@ -70,7 +70,7 @@ void setup() {
 
   iniciarUI(3000);
   //iniciarTareaMesh(16000);
-  iniciarTareaEnviarDatos(8000); // (da error iniciar si no se pone bastante memoria)
+  iniciarTareaEnviarDatos(8000); // (da error iniciar si no se pone bastante memoria)  // julio, antes estaba activado
 }
 
 void loop() {
@@ -169,6 +169,7 @@ void setupDeSensores(){
   todosLosSensores[4].inicializar(IDdelDispositivo, "TDS", sensorTDS, pinADC_TDS, true, &ads1);              // usa el mismo sensor de conductividad
   
   todosLosSensores[5].inicializar(IDdelDispositivo, "Pres", sensorPres, pinADC_Pres, true, &ads1);           // Sensor de presion
+  todosLosSensores[6].inicializar(IDdelDispositivo, "Caud", sensorCaudal, pin_Caudal, false);                // Sensor de caudal
 }
 
 bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){

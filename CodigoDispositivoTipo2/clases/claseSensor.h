@@ -77,7 +77,7 @@ class sensor{
   bool cambiarVoltajeMaximoADC(float valorNuevo);
   int devolverLecturaDigital();
   float devolverVoltaje();
-  float devolverCorriente();         // para sensores de 4-20 mA
+  float devolverCorriente();           // para sensores de 4-20 mA
   float devolverParametroFisico();
   String devolverUnidadesFisicas();
   JsonObject obtenerArchivoJson();
@@ -94,6 +94,7 @@ class sensor{
   float calcularTurbidez();
   float calcularTDS();
   float calcularPresion();
+  float calcularCaudal();
   float determinarTemperatura();
 
 }; // fin de la clase
@@ -154,8 +155,16 @@ bool sensor::inicializar(int id, String param,uint8_t tipoDeSens, int pinDeConex
       limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
       break;
 
-    // Hay que arreglar los datos del sensor de presion y agregar el caudalimetro
+    // Hay que arreglar los datos del sensor de presion y del caudalimetro
     case sensorPres:
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
+      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
+      limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
+      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 3.0); 
+      limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
+      break;
+    case sensorCaudal:
       valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
       valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
       valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
@@ -265,6 +274,9 @@ int sensor::devolverLecturaDigital(){
       case sensorPres:
         lecturaDigital = analogRead(pinDeConexion);
         break;
+      case sensorCaudal:
+        lecturaDigital = 12;  // agregar funcion para recuperar caudal mediante los pulsos    // analogRead(pinDeConexion);
+        break;
       default: return -1;  // retorna un -1 como indicativo de error
     }
     return lecturaDigital;  // retorna el valor correspondiente
@@ -312,9 +324,13 @@ float sensor::devolverParametroFisico(){
         return lectura;
         break;
 
-      // Falta agregar caudalimetro
+      // Nuevos sensores
       case sensorPres:
         lectura = calcularPresion();
+        return lectura;
+        break;
+      case sensorCaudal:
+        lectura = calcularCaudal();
         return lectura;
         break;
       default: return -1;  // retorna un -1 como indicativo de error
@@ -340,9 +356,12 @@ String sensor::devolverUnidadesFisicas(){
         return "PPM";  // ppm = mg/L
         break;
 
-      // Falta agregar cuadalimetro
+      // Nuevos sensores
       case sensorPres:
-        return "kPa";  // ppm = mg/L
+        return "kPa";
+        break;
+      case sensorCaudal:
+        return "m3/s";
         break;
       default: return "ErrorUnits";  // retorna un -1 como indicativo de error
     }
@@ -406,15 +425,22 @@ float sensor::calcularTDS(){    // ppm = mg/L
 }
 
 float sensor::calcularPresion(){
-  // Funcion que devuelve el valor de turbidez
+  // Funcion que devuelve el valor de la presion
   voltaje = devolverVoltaje();
   corriente = devolverCorriente();
   float presion = valorCalibracion*voltaje + valorCalibracion2;  // similar a map con ecuacion lineal
   return presion;
 
   //return valorCalibracion*square(voltaje+1.3)+valorCalibracion2*(voltaje+1.3)+valorCalibracion3;   // Ecuacion de calculo, ver https://ecuarobot.com/2021/03/24/medicion-de-la-turbidez-del-agua-para-determinar-la-calidad-del-agua-mediante-arduino-y-el-sensor-de-turbidez/
-}   
+}
 
+float sensor::calcularCaudal(){
+  // Funcion que devuelve el valor de caudal
+  voltaje = devolverVoltaje();
+  corriente = devolverCorriente();
+  float caudal = valorCalibracion*voltaje + valorCalibracion2;  // similar a map con ecuacion lineal
+  return caudal;
+}
 
 float sensor::determinarTemperatura(){
   if (!errorEnTemperatura){

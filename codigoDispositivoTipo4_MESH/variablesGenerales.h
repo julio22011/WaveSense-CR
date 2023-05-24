@@ -1,7 +1,7 @@
+
 //=====================================================================
 //      Credenciales
 //=====================================================================
-
 
 // Credenciales de ThingSpeak
 #define channelID 1097748
@@ -10,7 +10,6 @@
 //=====================================================================
 //      Librerias de codigo
 //=====================================================================
-
 
 // Para painless mesh y servidor local
 #include <WiFiClient.h> // para poder conectarse a router de Internet

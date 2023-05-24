@@ -66,7 +66,6 @@ int enviarDatosInternet(){
 
     // Retornar el codigo obtenido, 200 indica exito, 404 error
     return httpResponseCode;
-
   }
 
   else {
@@ -100,6 +99,7 @@ bool enviarDatosThingSpeak(String msg){
   ThingSpeak.setField(3,(float) ultimoJsonRecibido["Cond"]);     // asigna el campo donde se guarda la variable
   ThingSpeak.setField(4,(float) ultimoJsonRecibido["Turb"]);      // asigna el campo donde se guarda la variable
   ThingSpeak.setField(5,(float) ultimoJsonRecibido["TDS"]);      // asigna el campo donde se guarda la variable
+  //...
     // 
   ThingSpeak.writeFields(channelID,apikey);  // envia los datos
 

@@ -12,6 +12,7 @@ void UI(){
   // Tarea que mantiene funcionando el UI de la OLED
   ui.update();
 }
+
 Task taskUI( TASK_MILLISECOND * 10 , TASK_FOREVER, &UI );  // crear tarea de envio de mensajes
 
 
@@ -173,13 +174,10 @@ void tareaEnviarDatos(void * parameters){
 
   // loop
   while(true){
-  
     JsonObject resultadoJsonPru = generarJsonDatosRutinarios();               // prueba con paquete general rutinario
     String mensaje;
     serializeJson(resultadoJsonPru, mensaje);
-    ui.mostrarMensaje("Enviando datos");       // indicar en la ui que se esta enviando un mensaje por mesh
     mesh.sendBroadcast( mensaje );
-    ui.cambioPendiente = true;                 // volver a dibujar el menu de la ui
     
     //mesh.sendBroadcast( "Hola" );    
     //taskSendMessage.setInterval( random( TASK_SECOND * 1, TASK_SECOND * 3 )); // Establece un intervalo aleatorio de tiempo (cambiado por vTaskDelay())
