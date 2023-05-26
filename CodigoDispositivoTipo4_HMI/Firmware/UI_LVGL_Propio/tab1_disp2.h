@@ -66,7 +66,8 @@ void actualizarHMIGeneral(lv_obj_t * obj){
         lv_label_set_text(labelMedida, "Espere"); // limpiar ultimo valor del gauge
 
         opcionSeleccionada = lv_dropdown_get_selected(obj);
-        switch(opcionSeleccionada){
+        // Nota: seria conveniente mover este switch a la clase sensoresData
+        switch(opcionSeleccionada){ 
           case 0: lv_label_set_text(labelEc, "La temperatura no requiere calibracion."); 
                   // Agregar cambios de grafica, unidades, etc
                   lv_label_set_text(labelUnidad, "Celsius");
@@ -87,6 +88,13 @@ void actualizarHMIGeneral(lv_obj_t * obj){
                   // Agregar cambios de grafica, unidades, etc
                   lv_label_set_text(labelUnidad, "ppm");
                   break;
+          case 5: lv_label_set_text(labelEc, "Pres(MPa) = A(voltaje) + B");
+                  // Agregar cambios de grafica, unidades, etc
+                  lv_label_set_text(labelUnidad, "MPa");
+                  break;
+          case 6: lv_label_set_text(labelEc, "Caud(m3/s) = A(voltaje) + B");
+                  // Agregar cambios de grafica, unidades, etc
+                  lv_label_set_text(labelUnidad, "m3/s");
           default: lv_label_set_text(labelEc, "Error. Sensor no registrado."); break;
         }
         lv_meter_set_scale_range(meter,scale,gestorMensajes.sensoresAsociados[opcionSeleccionada].limites[0],gestorMensajes.sensoresAsociados[opcionSeleccionada].limites[5],280,130); // Ajustar las escala del grafico (meter, escala, min, max, angulo, rotacion)

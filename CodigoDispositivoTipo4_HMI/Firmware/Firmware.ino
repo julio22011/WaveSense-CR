@@ -104,9 +104,10 @@ void loop() {
   vTaskDelay( pdMS_TO_TICKS(5) ); // Espera para evitar sobrecargar el procesador
 
   recibirDatos();              // debe ir en una tarea aparte
-  actulizacionDeHoraUI();      // cambia el estado de la hora
+  actulizacionDeHoraUI();      // cambia el estado de la hora // Nota: mejor cambiarlo por un timer de lvgl
 
-  #ifdef depuracionDeMemoria
+  // Nota: mejor cambiarlo por un timer de lvgl
+  #ifdef depuracionDeMemoria 
     //Serial.println(uxTaskGetStackHighWaterMark(NULL)); // esp_get_free_heap_size()  uxTaskGetStackHighWaterMark(NULL)
     tft.drawString("Stack M:", 5, 5);  // tft.drawNumber(123, 100, 10);  tft.drawFloat(3.14, 2, 150, 10);
     tft.drawNumber(uxTaskGetStackHighWaterMark(NULL), 60, 5);  // uxTaskGetStackHighWaterMark(NULL) 
@@ -159,12 +160,14 @@ void setupDeData(){
   todosLosSensoresData[2].inicializar("Cond", sensorConductividad);
   todosLosSensoresData[3].inicializar("Turb", sensorTurbidez);
   todosLosSensoresData[4].inicializar("TDS ", sensorTDS);
+  todosLosSensoresData[5].inicializar("Pres", sensorPres);
+  todosLosSensoresData[6].inicializar("Caud", sensorCaudal);
 
   todosLosFitrosData[0].inicializar(1);
   todosLosFitrosData[1].inicializar(2);
   todosLosFitrosData[2].inicializar(3);  
 
-  gestorMensajes.asociarObjetos(todosLosSensoresData, todosLosFitrosData, 5,3);          //sensorData *sensores, filtroData *filtros, int numSensores, int numFiltros
+  gestorMensajes.asociarObjetos(todosLosSensoresData, todosLosFitrosData, 7,3);          //sensorData *sensores, filtroData *filtros, int numSensores, int numFiltros
 }
 
 void actulizacionDeHoraUI(){

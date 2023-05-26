@@ -22,6 +22,8 @@
 #define sensorConductividad 3
 #define sensorTurbidez      4
 #define sensorTDS           5
+#define sensorPres          6
+#define sensorCaudal        7
 
 DynamicJsonDocument jsonBufferSen(1024); // Crear instancia para los documentos JSON
 
@@ -110,6 +112,24 @@ bool sensorData::inicializar(String param, uint8_t tipoDeSens){  // Funcion de i
       limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
       break;
     case sensorTDS:
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
+      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
+      limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
+      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 3.0); 
+      limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
+      break;
+
+    // Hay que arreglar los datos del caudalimetro
+    case sensorPres:
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 0.3);
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", -0.15);
+      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 0);
+      limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
+      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 0.5); 
+      limites[4] = preferences.getFloat("limites4", 1.0); limites[5] =  preferences.getFloat("limites5", 1.2);
+      break;
+    case sensorCaudal:
       valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
       valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
       valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;

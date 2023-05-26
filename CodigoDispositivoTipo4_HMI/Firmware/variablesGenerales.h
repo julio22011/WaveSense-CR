@@ -41,8 +41,9 @@ Preferences preferences;  // para guardar datos en la memoria NVR
 // Clases de recepcion de datos
 filtroData filtroData1, filtroData2, filtroData3;
 filtroData todosLosFitrosData[] = {filtroData1, filtroData2, filtroData3}; // matriz de filtros
-sensorData sdTemperatura, sdPH, sdConductividad, sdTurbidez, sdTDS;
-sensorData todosLosSensoresData[] = {sdTemperatura, sdPH, sdConductividad, sdTurbidez, sdTDS};
+
+sensorData sdTemperatura, sdPH, sdConductividad, sdTurbidez, sdTDS, sdPres, sdCaud;
+sensorData todosLosSensoresData[] = {sdTemperatura, sdPH, sdConductividad, sdTurbidez, sdTDS, sdPres, sdCaud};
 
 mensaje gestorMensajes;
 botones botonesHMI;     // crear instancia de los botones
