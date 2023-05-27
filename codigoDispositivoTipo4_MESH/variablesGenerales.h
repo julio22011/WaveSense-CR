@@ -77,5 +77,6 @@ bool errorEnHora = false;
 //      Archivos adicionales del programa
 //=====================================================================
 
+#include "paginaPrincipal.h"
 #include "envioDatosInternet.h"
 #include "libreriasCreadas/firebaseServices.h"

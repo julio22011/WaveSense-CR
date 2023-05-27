@@ -151,7 +151,9 @@ int mensaje::entregarMensajeRecibido(String strEntrante){
       sensoresAsociados[1].lecturaFisica = ultimoJsonRecibido["pH"];
       sensoresAsociados[2].lecturaFisica = ultimoJsonRecibido["Cond"];
       sensoresAsociados[3].lecturaFisica = ultimoJsonRecibido["Turb"];
-      sensoresAsociados[4].lecturaFisica = ultimoJsonRecibido["TDS"];  // desactivado temporalmente
+      sensoresAsociados[4].lecturaFisica = ultimoJsonRecibido["TDS"];
+      sensoresAsociados[5].lecturaFisica = ultimoJsonRecibido["Pres"];  // Nota: Cambiar tanta repeticion de instrucciones con un for
+      sensoresAsociados[6].lecturaFisica = ultimoJsonRecibido["Caud"];
 
       for(int i = 0; i < numeroSensores; i++){  // guardar la temperatura en todos los sensores
         sensoresAsociados[i].temperatura = ultimoJsonRecibido["Temp"];

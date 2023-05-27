@@ -138,7 +138,7 @@ void setup() {
   });
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
     {
-    request->send(200, "text/html", "<form>Text to Broadcast<br><input type='text' name='BROADCAST'><br><br><input type='submit' value='Submit'></form>");
+    request->send(200, "text/html", paginaPrincipalSt);  // "<form>Text to Broadcast<br><input type='text' name='BROADCAST'><br><br><input type='submit' value='Submit'></form>"
     if (request->hasArg("BROADCAST"))
       {
       String msg = request->arg("BROADCAST");

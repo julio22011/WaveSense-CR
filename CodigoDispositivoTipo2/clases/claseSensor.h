@@ -157,12 +157,12 @@ bool sensor::inicializar(int id, String param,uint8_t tipoDeSens, int pinDeConex
 
     // Hay que arreglar los datos del caudalimetro
     case sensorPres:
-      valorCalibracion =  preferences.getFloat("valorCalibracion", 3/10);
-      valorCalibracion2 = preferences.getFloat("valorCalibracion2", -0.15);
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 300);
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", -150);
       valorCalibracion3 = preferences.getFloat("valorCalibracion3", 0);
       limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
-      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 0.5); 
-      limites[4] = preferences.getFloat("limites4", 1.0); limites[5] =  preferences.getFloat("limites5", 1.2);
+      limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 500); 
+      limites[4] = preferences.getFloat("limites4", 1000); limites[5] =  preferences.getFloat("limites5", 1200);
       break;
     case sensorCaudal:
       valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;

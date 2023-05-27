@@ -88,11 +88,11 @@ void actualizarHMIGeneral(lv_obj_t * obj){
                   // Agregar cambios de grafica, unidades, etc
                   lv_label_set_text(labelUnidad, "ppm");
                   break;
-          case 5: lv_label_set_text(labelEc, "Pres(MPa) = A(voltaje) + B");
+          case 5: lv_label_set_text(labelEc, "Pres(kPa) = A(voltaje) + B");
                   // Agregar cambios de grafica, unidades, etc
-                  lv_label_set_text(labelUnidad, "MPa");
+                  lv_label_set_text(labelUnidad, "kPa");
                   break;
-          case 6: lv_label_set_text(labelEc, "Caud(m3/s) = A(voltaje) + B");
+          case 6: lv_label_set_text(labelEc, "Caud(m3/s) = A(DP) + B");  // DP: Densidad de pulsos (pulsos acumulados/deferencial de tiempo)
                   // Agregar cambios de grafica, unidades, etc
                   lv_label_set_text(labelUnidad, "m3/s");
           default: lv_label_set_text(labelEc, "Error. Sensor no registrado."); break;
