@@ -5,45 +5,6 @@ Codigo de programcion para los dispositivos de tipo 2 y 3.
 // Archivo de configuracion
 #include "variablesGenerales.h"
 
-// Incluir las librerias utilizadas
-//-----------------------------
-#include "painlessMesh.h"
-
-// Incluir las clases requeridas
-//-----------------------------
-#include "clases/claseFiltros.h" // Clase para menejar los filtros
-#include "clases/claseSensor.h"  // Clase para manejar sensores
-#include "clases/claseUI_OLED.h" // ya incluye otras librarias requeridas
-
-// Crear los objetos del programa
-//-----------------------------
-
-// Para la red mesh:
-Scheduler userScheduler; // Para la controlar las tareas
-painlessMesh  mesh;
-
-// Para los filtros:
-filtro filtro1, filtro2, filtro3; // crear objetos tipo filtro
-
-filtro todosLosFiltros[] = {filtro1, filtro2, filtro3};  // crea un array de filtros
-int cantidadDeFiltros = sizeof(todosLosFiltros)/sizeof(filtro);
-
-// Para los sensores
-sensor sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion, sCaudal;
-sensor todosLosSensores[] = {sTemperatura, sPH, sConductividad, sTurbidez, sTDS, sPresion, sCaudal}; // crear vector con todos los sensores
-int cantidadDeSensores = sizeof(todosLosSensores)/sizeof(sensor);
-
-// Para la ui de la pantalla:
-UI_OLED ui;          // crear objeto de ui
-menu menuPrincipal;
-menu menuSecundario;
-botones botones;
-
-// Incluir otros archivos del codigo que manipulan los objetos
-//-----------------------------
-#include "multitareaFreeRTOS.h"
-#include "funcionesDeRedMesh.h"
-
 long int millisAntes = millis();  // varaible para guardar el tiempo en un momento de
 
 void setup() {
@@ -129,15 +90,20 @@ void crearUI(){
   String titulosMenuSecundario[] = {
     "Reinicio",
     "Mostrar voltajes",
-    "Tipo de conexion",
-    "Modo solitario",
+    "Modo de conexion",
     "Informacion"};
   int numDeOpcionesSec = (sizeof(titulosMenuSecundario)/sizeof(titulosMenuSecundario[0])); // determinar la cantidad de elementos
   menuSecundario.configurarMenu(1, numDeOpcionesSec, "Menu 2", titulosMenuSecundario);
   //menuSecundario.imprimirOpcionesEnSerial();  // funcion de depuracion
 
+  String titulosMenuModoConex[] = {
+    "Solitario",
+    "Mesh"};
+  int numDeOpcionesModeConex = (sizeof(titulosMenuModoConex)/sizeof(titulosMenuModoConex[0])); // determinar la cantidad de elementos
+  menuModoConex.configurarMenu(2, numDeOpcionesModeConex, "Menu 3", titulosMenuModoConex);
+
   // Asociar los menus creados a la ui:
-  menu todosLosMenus[] = {menuPrincipal,menuSecundario}; // Vector de los menus
+  menu todosLosMenus[] = {menuPrincipal, menuSecundario, menuModoConex}; // Vector de los menus
   ui.asociarMenu(2, todosLosMenus);
   //ui.imprimirTitulosDeMenusSerial(); // funcion de depuracion
 
@@ -176,7 +142,7 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
   //ui.menuActual = 1;
   //ui.cambioPendiente = true; // le indica al ui que se ha hecho un cambio, no es necesario si se presiona un boton
   if(menuActual == 0 && opcionActual == 5){
-    ui.menuActual = 1;
+    ui.menuActual = 1; // cambiar a menu de ajustes
   }
   else if(menuActual == 0 && opcionActual == 0){  // opcion: "Hacer retrolavado"
     todosLosFiltros[0].horarioInt[3] = 10;  // configurar tiempo de retrolavado (segundos)
@@ -199,6 +165,10 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
   else if(menuActual == 0 && opcionActual == 3){  // menu 1, opcion 4
     digitalWrite(pinBuzzer, LOW);
   }
+  else if(menuActual == 0 && opcionActual == 4){  // menu 1, opcion 5
+    // Apagar la red mesh
+    // ...
+  }
   else if(menuActual == 1 && opcionActual == 0){  // menu 2, opcion 1
     ESP.restart();
   }
@@ -215,5 +185,17 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
       ui.mostrarVoltajesSensores(todosLosSensores, cantSensores); // muestra en la pantalla los voltajes
       vTaskDelay(pdMS_TO_TICKS(2000)); // esperar un poco para no saturar la tarea
     }
+  }
+  else if(menuActual == 1 && opcionActual == 2){  // menu 2, opcion 3
+    // Cambiar a menu se seleccion de modo de conexion
+    ui.menuActual = 2;
+  }
+  else if(menuActual == 2 && opcionActual == 0){  // menu 3, opcion 1
+    // Activar modo mesh
+    // ...
+  }
+  else if(menuActual == 2 && opcionActual == 1){  // menu 3, opcion 2
+    // Activar modo solitario
+    // ...
   }
 }
