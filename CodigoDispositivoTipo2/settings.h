@@ -11,6 +11,7 @@ Varibles generales para configurar el dispostivo tipo 2 y tipo 3:
 //=====================================================================
 
 //#define depuracionBotones //activa el envio de datos por serial sobre los botones
+#define depuracionModoSolitario // activar forzadamente el modo solitario
 
 
 //=====================================================================
@@ -87,3 +88,8 @@ int limitesDeLect[] = {100,4095,3900,3000,2700,2000,1600,1000,600};  // limite d
 #define   MESH_PORT       5555
 
 int msDeMensajeRutinario = 3000;  // tiempo de espera entre los mensajes rutinarios
+
+// Para wifi
+//----------------------------
+String ssidModem = "KONOHA2";
+String passwordModem = "familiars58";

@@ -71,7 +71,7 @@ bool yendoPosServicio = false;  // variable para evitar iniciar dos veces las mi
 
 // Incluir otros archivos del codigo que manipulan los objetos
 //-----------------------------
+#include "libreriasCreadas/firebaseServices.h"
+
 #include "multitareaFreeRTOS.h"
 #include "funcionesDeRedMesh.h"
-
-#include "libreriasCreadas/firebaseServices.h"

@@ -14,10 +14,15 @@ void setup() {
   pinMode(pinTransistor, OUTPUT);
   digitalWrite(pinTransistor, LOW);
 
-  // Inicializacion de objetos
+  // Inicializacion de objetos  
   setupRedMesh();        // configura la red mesh
   crearUI();             // Configura la ui de la pantalla (debe ejecutarse en otra tarea por aparte de la red mesh)
   setupDeSensores();     // configura los sensores
+
+  #if defined(depuracionModoSolitario)
+    mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip  // temporal, para pruebas *********
+    setupFirebaseRTDB();                           // Configurar Firebase      // temporal, para pruebas *********
+  #endif
 
   // Prueba de buzzer
   pinMode(pinBuzzer, OUTPUT);
@@ -27,7 +32,7 @@ void setup() {
 
   // Agregar al gestor de tareas la tarea de retrolavados
   userScheduler.addTask( taskEjecucionDeRetrolavadoInterno);     // agregar al gestor la tarea que ejecuta los retrolavados
-  //taskEjecucionDeRetrolavado.enable();                  // comenzar a ejecutar la tarea
+  //taskEjecucionDeRetrolavado.enable();                         // comenzar a ejecutar la tarea
 
   iniciarUI(3000);
   //iniciarTareaMesh(16000);
@@ -196,6 +201,7 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
   }
   else if(menuActual == 2 && opcionActual == 1){  // menu 3, opcion 2
     // Activar modo solitario
-    // ...
+    mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip
+    setupFirebaseRTDB();                           // Configurar Firebase
   }
 }
