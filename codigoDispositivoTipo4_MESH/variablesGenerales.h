@@ -11,6 +11,9 @@
 //      Librerias de codigo
 //=====================================================================
 
+//#include <WiFiManager.h>
+//#include <strings_en.h>
+
 // Para painless mesh y servidor local
 #include <WiFiClient.h> // para poder conectarse a router de Internet
 #include "painlessMesh.h"

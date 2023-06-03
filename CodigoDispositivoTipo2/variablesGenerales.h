@@ -19,6 +19,9 @@ Varibles generales para el dispostivo tipo 2 y tipo 3:
 //-----------------------------
 #include "painlessMesh.h"
 
+#include "ESPAsyncWebServer.h"
+#include <AsyncElegantOTA.h>   // para hacer ota por el navegador
+
 // Incluir las clases requeridas
 //-----------------------------
 #include "clases/claseFiltros.h" // Clase para menejar los filtros
@@ -57,6 +60,9 @@ menu menuPrincipal;
 menu menuSecundario;
 menu menuModoConex;
 botones botones;
+
+// Para funciones de red
+AsyncWebServer server(80); // para usar OTA u otras paginas
 
 //=====================================================================
 //           FreeRTOS

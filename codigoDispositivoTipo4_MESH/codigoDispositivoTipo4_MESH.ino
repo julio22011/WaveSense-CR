@@ -1,6 +1,4 @@
 
-//#include <WiFiManager.h>
-//#include <strings_en.h>
 #include "variablesGenerales.h"
 
 // Julio 0

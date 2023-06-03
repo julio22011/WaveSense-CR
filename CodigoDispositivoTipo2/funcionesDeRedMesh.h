@@ -22,10 +22,6 @@ void sendMessage() {
   serializeJson(resultadoJsonPru, mensaje);
   mesh.sendBroadcast( mensaje );
   //taskSendMessage.setInterval( random( TASK_SECOND * 1, TASK_SECOND * 3 )); // Establece un intervalo aleatorio de tiempo
-
-  #if defined(depuracionModoSolitario)
-    sendDataRTDB(mensaje, "PriDis2"); // subir datos a Firebase
-  #endif
 }
 
 void receivedCallback( uint32_t from, String &msg ) {
@@ -33,7 +29,7 @@ void receivedCallback( uint32_t from, String &msg ) {
   //Serial2.printf("startHere: Received from %u msg=%s\n", from, msg.c_str());
 
   #if defined(depuracionModoSolitario)
-  sendDataRTDB(msg, "PriDis2");
+    sendDataRTDB(msg, "PriDis2");
   #endif
 
   // Convertir a Json y procesar los datos recibidos segun su topic:

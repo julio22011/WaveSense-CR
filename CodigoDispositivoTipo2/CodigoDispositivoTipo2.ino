@@ -22,6 +22,9 @@ void setup() {
   #if defined(depuracionModoSolitario)
     mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip  // temporal, para pruebas *********
     setupFirebaseRTDB();                           // Configurar Firebase      // temporal, para pruebas *********
+    AsyncElegantOTA.begin(&server);    // Start ElegantOTA
+    Serial.println("OTA por navegador iniciado.");
+    server.begin();
   #endif
 
   // Prueba de buzzer
@@ -196,12 +199,13 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
     ui.menuActual = 2;
   }
   else if(menuActual == 2 && opcionActual == 0){  // menu 3, opcion 1
-    // Activar modo mesh
+    // Desactivar modo solitario
     // ...
   }
   else if(menuActual == 2 && opcionActual == 1){  // menu 3, opcion 2
     // Activar modo solitario
-    mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip
-    setupFirebaseRTDB();                           // Configurar Firebase
+    // modoSolitario = true;    // activar modo solitario
+    // (falta guardar los ajustes en preferencias antes de reiniciar)
+    // ESP.restart(); // reiniciar para aplicar cambios
   }
 }

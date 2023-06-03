@@ -178,6 +178,10 @@ void tareaEnviarDatos(void * parameters){
     String mensaje;
     serializeJson(resultadoJsonPru, mensaje);
     mesh.sendBroadcast( mensaje );
+
+    #if defined(depuracionModoSolitario)
+      sendDataRTDB(mensaje, "PriDis2"); // subir datos a Firebase
+    #endif
     
     //mesh.sendBroadcast( "Hola" );    
     //taskSendMessage.setInterval( random( TASK_SECOND * 1, TASK_SECOND * 3 )); // Establece un intervalo aleatorio de tiempo (cambiado por vTaskDelay())
