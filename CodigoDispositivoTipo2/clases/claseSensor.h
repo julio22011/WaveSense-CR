@@ -56,6 +56,9 @@ class sensor{
   float temperatura;
   bool errorEnTemperatura = false;
 
+  long int milisAntesQ;              // para registrar el tiempo t1                               
+  long int millisDespQ;              // para registrar el tiempo t2  deltaT = t2-t1 ====> Densidad de pulsos = (cuentaCaudal/deltaT)
+
   uint8_t index18b20 = 0;            // Indice del sensor de 18b20, util cuando son varios sensores iguales
 
   float limites[6];  // min, minrojo, minamarillo, maxamarillo, maxrojo, max
@@ -165,9 +168,9 @@ bool sensor::inicializar(int id, String param,uint8_t tipoDeSens, int pinDeConex
       limites[4] = preferences.getFloat("limites4", 1000); limites[5] =  preferences.getFloat("limites5", 1200);
       break;
     case sensorCaudal:
-      valorCalibracion =  preferences.getFloat("valorCalibracion", 133.42);    //133.42;
-      valorCalibracion2 = preferences.getFloat("valorCalibracion2", 255.86);   //255.86;
-      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 857.39);   //857.39;
+      valorCalibracion =  preferences.getFloat("valorCalibracion", 7.5);   // Valor de factor K en L/min
+      valorCalibracion2 = preferences.getFloat("valorCalibracion2", 0);    //  
+      valorCalibracion3 = preferences.getFloat("valorCalibracion3", 0);    //
       limites[0] = preferences.getFloat("limites0", 0.0);  limites[1] =  preferences.getFloat("limites1", 0.0);
       limites[2] = preferences.getFloat("limites2", 0.0); limites[3] =  preferences.getFloat("limites3", 3.0); 
       limites[4] = preferences.getFloat("limites4", 5.0); limites[5] =  preferences.getFloat("limites5", 1100.0);
@@ -178,6 +181,12 @@ bool sensor::inicializar(int id, String param,uint8_t tipoDeSens, int pinDeConex
   if(tipoDeSensor == sensorTemp){
     // Iniciar el bus OneWire del sensor de temperatura
     setup18B20();
+  } else if(tipoDeSensor == sensorCaudal){
+    // Configurar interrupciones del caudalimetro
+    pinMode(pinDeConex, INPUT);
+    attachInterrupt(pinDeConex, ISR_Cuadal, RISING);   // digitalPinToInterrupt(pinDeConex)
+    milisAntesQ = millis();
+    // detachInterrupt(GPIOPin); // para quitar una interrupcion
   }
 
   if (usaADC){
@@ -361,7 +370,7 @@ String sensor::devolverUnidadesFisicas(){
         return "kPa";
         break;
       case sensorCaudal:
-        return "m3/s";
+        return "L/min";
         break;
       default: return "ErrorUnits";  // retorna un -1 como indicativo de error
     }
@@ -369,7 +378,6 @@ String sensor::devolverUnidadesFisicas(){
 
 // Funciones de calculo de la clase
 //************************************************************************
-
 
 // Funcion general que permite calcular numero al cuadrado
 float sensor::square(float x){
@@ -436,9 +444,18 @@ float sensor::calcularPresion(){
 
 float sensor::calcularCaudal(){
   // Funcion que devuelve el valor de caudal
-  voltaje = devolverVoltaje();
-  corriente = devolverCorriente();
-  float caudal = valorCalibracion*voltaje + valorCalibracion2;  // similar a map con ecuacion lineal
+  millisDespQ = millis();
+  float dp = (cuentaCuadal*1000)/(millisDespQ-milisAntesQ);       // dp = N. pulsos/deltaT
+  float caudal = valorCalibracion*dp + valorCalibracion2;  // similar a map con ecuacion lineal
+
+  #if defined(depSensorCaudal)
+    Serial.printf("El caudal es: %f. Pulsos: %i \n", caudal, cuentaCuadal);
+  #endif
+  
+  // Resetear valores
+  cuentaCuadal = 0;
+  milisAntesQ = millis();
+
   return caudal;
 }
 

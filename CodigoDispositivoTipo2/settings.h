@@ -12,7 +12,7 @@ Varibles generales para configurar el dispostivo tipo 2 y tipo 3:
 
 //#define depuracionBotones //activa el envio de datos por serial sobre los botones
 #define depuracionModoSolitario // activar forzadamente el modo solitario
-
+#define depSensorCaudal          // activar impresion del caudal por serial
 
 //=====================================================================
 //           Datos del dispositivo
@@ -68,7 +68,7 @@ int pinBuzzer = 12;
 #define pinADC_Pres 3    // Pin del ADC
 
 #define pin_Temp    15   // Pin del microcontrolador
-#define pin_Caudal   4   // Pin del microcontrolador
+#define pin_Caudal  35   // Pin del microcontrolador
 
 //=====================================================================
 //           Variables de configuracion

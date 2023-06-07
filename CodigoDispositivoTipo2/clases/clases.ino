@@ -2,7 +2,19 @@
 // editar los archivos de la carpeta con Arduino
 
 
+#define pin_Temp 15       // solamente para evitar errores de compilacion
 
+#include "claseSensor.h"
+
+void setup(){
+
+}
+
+
+void loop(){}
+
+
+/*
 //////////////////////////////
 // Lo siguiente es una prueba de las clases
 
@@ -162,10 +174,11 @@ void loop(){
   serializeJson(resultadoJson, Serial);
   Serial.println();
   vTaskDelay(pdMS_TO_TICKS(1000));
-  */  
-} // fin del loop
+  */
+ 
+//} // fin del loop
 
-
+/*
 void funcionPruebaDeSensores(){
   //Funcion para verificar funcionamiento de clase sensor
   // Inciar los sensores:
@@ -216,6 +229,8 @@ void funcionPruebaMenu(){
   ui.mostrarMenuEnOLED(menuSecundario);
 }
 
+
+*/
 
 
 

@@ -33,3 +33,13 @@ DallasTemperature sensorDS18B20(&oneWireObjeto);
 void setup18B20(){
   sensorDS18B20.begin();
 }
+
+
+// Funciones de interrupcion para el caudalimetro
+//************************************************************************
+volatile int cuentaCuadal = 0;              // para registrar los pulsos del cuadalimetro. Volatile hace que la variable este en ram
+
+void IRAM_ATTR ISR_Cuadal() {   // con IRAM_ATTR se hace que la fun corra en la memoria ram
+  cuentaCuadal++;
+}
+
