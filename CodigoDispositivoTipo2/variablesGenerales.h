@@ -11,6 +11,11 @@ Varibles generales para el dispostivo tipo 2 y tipo 3:
 //=====================================================================
 //           Librerias
 //=====================================================================
+
+// Librerias generales de c++
+//#include <iostream>
+//#include <string>
+
 // Liberia para usar JSON
 #include <ArduinoJson.h>
 #include <ArduinoJson.hpp>

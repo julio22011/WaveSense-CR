@@ -40,6 +40,8 @@
 // Objetos y variables globales
 //***************************************************************************************
 
+String esp32id = "esp32-a"; // es el ID del dispositivo (hay que cambiar la x por el id del chip o el mac)
+
 FirebaseData fbdo; // Define Firebase Data object
 
 FirebaseAuth auth;
@@ -49,8 +51,9 @@ FirebaseConfig config;
 int timeZone = -6;
 ESP32Time rtc(3600*timeZone);
 bool gotTimestamp = false;
-uint16_t timeAge = 0;       // permite asignarle una edad a la hora, para actualizar la hora del rtc cada cierto tiempo
-uint16_t maxTimeAge = 500;  // edad maxima del tiempo del rtc (espezado en intentos de envio de datos)
+uint16_t timeAge = 0;         // permite asignarle una edad a la hora, para actualizar la hora del rtc cada cierto tiempo
+uint16_t maxTimeAge = 500;    // edad maxima del tiempo del rtc (espezado en intentos de envio de datos)
+String rutaTimeOld;           // para detectar los cambios en el indice de datos: almacena el valor antiguo de ruta para compararlo con el actual
 
 //***************************************************************************************
 // Funciones
@@ -75,7 +78,11 @@ void setupFirebaseRTDB(){
     Serial.println(); Serial.print("Connected with IP: "); Serial.println(WiFi.localIP()); Serial.println();
   }
 */
-  
+  // Setear el id del dispositivo
+  char idText[50];
+  sprintf(idText, "esp32-%d", IDdelDispositivo); 
+  esp32id = String(idText);
+
   Serial.printf("Firebase Client v%s\n\n", FIREBASE_CLIENT_VERSION);
 
   // For the following credentials, see examples/Authentications/SignInAsUser/EmailPassword/EmailPassword.ino
@@ -108,7 +115,6 @@ void sendSettingsRTDB(String nodesJson){
     FirebaseJson json;
 
     // Datos de configuracion
-    String esp32id = "esp32-x"; // (provisional, hay que cambiarlo por el id asi: std::to_string(chipId))
     String ruta = "/deviceReadings/" + esp32id + "/settings";  // dirigir la ruta al apartado de ajustes
     json.set("connectedNodes",  (String)nodesJson); // datos de los nodo conectados al root
     json.set("timeAt/.sv", "lastTimeConnected"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
@@ -119,7 +125,6 @@ void sendSettingsRTDB(String nodesJson){
   }
 }
 
-String esp32id = "esp32-x"; // es el ID del dispositivo (hay que cambiar la x por el id del chip o el mac)
 
 // Funcion para enviar datos
 void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno con los nombres y otro con los valores
@@ -154,14 +159,15 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
       // Generar la ruta con el timestamp
       //----------------------------------------------
       String rutaTime = rtc.getTime("/%Y/%B/%d/%H");                //utilizar la hora actualiza del rtc para construir la ruta "%A, %B %d %Y %H:%M:%S"
-      String ruta = "/deviceReadings/" + esp32id + "/readings" + rutaTime;  // agregarle a la ruta el orden de la fecha
+      String ruta = "/deviceReadings/" + esp32id + "/readings";     //+ rutaTime;  // agregarle a la ruta el orden de la fecha (eliminado)
+      String rutaInd = "/deviceReadings/" + esp32id + "/index" + rutaTime; 
       
       String milisegundosStr;
       if     (rtc.getMillis()>99) milisegundosStr = String(rtc.getMillis());
       else if(rtc.getMillis()>9)  milisegundosStr = "0" + String(rtc.getMillis());  // permite agregar ceros faltantes
       else                        milisegundosStr = "00" + String(rtc.getMillis()); // permite agregar ceros faltantes
       
-      String rutaTimestamp = "/" + String(rtc.getEpoch()) + milisegundosStr;        // para etiquetar datos con el timestamp del esp32
+      String rutaTimestamp = String(rtc.getEpoch()) + milisegundosStr;        // para etiquetar datos con el timestamp del esp32
 
       // Enviar los datos
       //----------------------------------------------
@@ -177,7 +183,7 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
       json.set("tds",  (float) ultimoJsonRecibido["TDS"]);
 
       json.set("pres",  (float) ultimoJsonRecibido["Pres"]);
-      json.set("caud",  (float) ultimoJsonRecibido["Caud"]);
+      json.set("caud",  (float) ultimoJsonRecibido["Caud"]);    // se puede utilizar "aaaa/caud" para crear niveles
       
       // now we will set the timestamp value at Ts
       json.set("timeAt/.sv", "timestamp"); // .sv is the required place holder for sever value which currently supports only string "timestamp" as a value
@@ -189,8 +195,16 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
       
       //---------------------------
       // Enviar los datos. Set data with timestamp
-      Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, ruta + rutaTimestamp, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
+      Serial.printf("Set data with timestamp... %s\n", Firebase.RTDB.setJSON(&fbdo, ruta + "/" + rutaTimestamp, &json) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
 
+      //==============================================
+      // Actualizar indice de datos
+      if(rutaTime != rutaTimeOld){
+        FirebaseJson jsonInd;                             // json para crear el indice
+        jsonInd.set("created", (String) rutaTimestamp);
+        Serial.printf("IUpdating index... %s\n", Firebase.RTDB.setJSON(&fbdo, rutaInd, &jsonInd) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
+        rutaTimeOld = rutaTime;
+      }
       // Push data with timestamp
       //Serial.printf("Push data with timestamp... %s\n", Firebase.RTDB.pushJSON(&fbdo, ruta, &json) ? "ok" : fbdo.errorReason().c_str());
 

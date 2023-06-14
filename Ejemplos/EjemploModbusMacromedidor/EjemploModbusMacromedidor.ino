@@ -5,7 +5,7 @@
 #define RX_PIN D2 // connect to converter's RX wire
 #define TX_PIN D3 // connect to converter's TX wire
 #define MODBUS_DEVICE_ID 1
-#define FLOW_REGISTER 1 (TUF-2000M Ultrasonic Flow Meter User Manual.pdf, section 7.1.1 MODBUS REGISTERS TABLE)
+#define FLOW_REGISTER 1        //(TUF-2000M Ultrasonic Flow Meter User Manual.pdf, section 7.1.1 MODBUS REGISTERS TABLE)
 #define FLOW_DATA_SIZE 2
 
 SoftwareSerial swSerial(RX_PIN, TX_PIN);
