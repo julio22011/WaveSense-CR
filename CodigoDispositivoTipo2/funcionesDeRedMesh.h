@@ -28,9 +28,8 @@ void receivedCallback( uint32_t from, String &msg ) {
   Serial.printf("startHere: Received from %u msg=%s\n", from, msg.c_str());
   //Serial2.printf("startHere: Received from %u msg=%s\n", from, msg.c_str());
 
-  #if defined(depuracionModoSolitario)
-    sendDataRTDB(msg, "PriDis2");
-  #endif
+  // Modo solitario:
+  if(activateSolitario) sendDataRTDB(msg, "PriDis2");
 
   // Convertir a Json y procesar los datos recibidos segun su topic:
   DynamicJsonDocument jsonRecibido = genJsonDeString(msg.c_str());  // convertir string recibido a json

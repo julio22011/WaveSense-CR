@@ -24,8 +24,11 @@ Varibles generales para el dispostivo tipo 2 y tipo 3:
 //-----------------------------
 #include "painlessMesh.h"
 
-#include "ESPAsyncWebServer.h"
+//#include "ESPAsyncWebServer.h"
 #include <AsyncElegantOTA.h>   // para hacer ota por el navegador
+
+//#include <WiFiManager.h>       // para gestionar redes WiFi (da error)
+#include <WiFiMulti.h>
 
 // Incluir las clases requeridas
 //-----------------------------
@@ -39,6 +42,8 @@ Varibles generales para el dispostivo tipo 2 y tipo 3:
 //=====================================================================
 DynamicJsonDocument jsonBufferTh(1024); // Crear instancia para los documentos JSON
 
+bool activateMesh = false;
+bool activateSolitario = true;
 
 //=====================================================================
 //           Objetos:  Crear los objetos del programa
@@ -47,6 +52,9 @@ DynamicJsonDocument jsonBufferTh(1024); // Crear instancia para los documentos J
 // Para la red mesh:
 Scheduler userScheduler; // Para la controlar las tareas
 painlessMesh  mesh;
+
+//Gestion de WiFi
+WiFiMulti WiFiMulti;
 
 // Para los filtros:
 filtro filtro1, filtro2, filtro3; // crear objetos tipo filtro

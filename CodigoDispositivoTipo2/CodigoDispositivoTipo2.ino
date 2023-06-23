@@ -15,16 +15,27 @@ void setup() {
   digitalWrite(pinTransistor, LOW);
 
   // Inicializacion de objetos  
-  setupRedMesh();        // configura la red mesh
-  crearUI();             // Configura la ui de la pantalla (debe ejecutarse en otra tarea por aparte de la red mesh)
-  setupDeSensores();     // configura los sensores
+  if(activateMesh) setupRedMesh();   // configura la red mesh
+  crearUI();                         // Configura la ui de la pantalla (debe ejecutarse en otra tarea por aparte de la red mesh)
+  setupDeSensores();                 // configura los sensores
+  Serial.println(IDdelDispositivo);
 
   #if defined(depuracionModoSolitario)
-    mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip  // temporal, para pruebas *********
+  if(activateSolitario){
+    //WiFi.begin(ssidModemChar, passwordModemChar);
+    Serial.setDebugOutput(true);
+    WiFiMulti.addAP("KONOHA", "familiars58");
+
+    while(WiFiMulti.run() != WL_CONNECTED) {
+        delay(100);
+    }
+        
+    if(activateMesh) mesh.stationManual(ssidModem, passwordModem);  //STATION_PORT, station_ip  // temporal, para pruebas *********
     setupFirebaseRTDB();                           // Configurar Firebase      // temporal, para pruebas *********
     AsyncElegantOTA.begin(&server);    // Start ElegantOTA
     Serial.println("OTA por navegador iniciado.");
     server.begin();
+  }
   #endif
 
   // Prueba de buzzer
@@ -43,7 +54,9 @@ void setup() {
 }
 
 void loop() {
-  mesh.update(); // mantiene activa la red mesh
+  if(activateMesh){
+    mesh.update(); // mantiene activa la red mesh
+  }
   //ui.update();
   //mostrarEstadoDeRetroEnUI();
 }
@@ -112,7 +125,7 @@ void crearUI(){
 
   // Asociar los menus creados a la ui:
   menu todosLosMenus[] = {menuPrincipal, menuSecundario, menuModoConex}; // Vector de los menus
-  ui.asociarMenu(2, todosLosMenus);
+  ui.asociarMenu(3, todosLosMenus); // numMenus, menus
   //ui.imprimirTitulosDeMenusSerial(); // funcion de depuracion
 
   // Configurar botones:
@@ -135,7 +148,12 @@ void handleInterrupt(){
 
 void setupDeSensores(){
   // Inciar los sensores:
-  IDdelDispositivo = mesh.getNodeId();                                                                       // obtener el chipid
+  uint32_t chipId;
+  for(int i=0; i<17; i=i+8) {
+    chipId |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+  }
+  
+  IDdelDispositivo = chipId; //mesh.getNodeId();                                                                       // obtener el chipid
   todosLosSensores[0].inicializar(IDdelDispositivo, "Temp", sensorTemp, pin_Temp, false);                    // false, no utiliza ADC
   todosLosSensores[1].inicializar(IDdelDispositivo, "pH", sensorPH, pinADC_pH, true, &ads1);
   todosLosSensores[2].inicializar(IDdelDispositivo, "Cond", sensorConductividad, pinADC_Cond, true, &ads1);
@@ -201,11 +219,12 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
   else if(menuActual == 2 && opcionActual == 0){  // menu 3, opcion 1
     // Desactivar modo solitario
     // ...
+    ESP.restart(); // reiniciar para aplicar cambios
   }
   else if(menuActual == 2 && opcionActual == 1){  // menu 3, opcion 2
     // Activar modo solitario
     // modoSolitario = true;    // activar modo solitario
     // (falta guardar los ajustes en preferencias antes de reiniciar)
-    // ESP.restart(); // reiniciar para aplicar cambios
+    ESP.restart(); // reiniciar para aplicar cambios
   }
 }

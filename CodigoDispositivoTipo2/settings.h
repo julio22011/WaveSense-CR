@@ -17,7 +17,7 @@ Varibles generales para configurar el dispostivo tipo 2 y tipo 3:
 //=====================================================================
 //           Datos del dispositivo
 //=====================================================================
-int IDdelDispositivo = 1475025633;
+int IDdelDispositivo = 0;  //90534969; //1475025633;
 
 
 //=====================================================================
@@ -83,7 +83,7 @@ int limitesDeLect[] = {100,4095,3900,3000,2700,2000,1600,1000,600};  // limite d
 
 // Para la red mesh
 //-----------------------------
-#define   MESH_PREFIX     "redMeshParqueIndustrialZeta"
+#define   MESH_PREFIX     "WaveSenseNET"
 #define   MESH_PASSWORD   "TEC_Zeta_acueducto"
 #define   MESH_PORT       5555
 
@@ -93,3 +93,6 @@ int msDeMensajeRutinario = 3000;  // tiempo de espera entre los mensajes rutinar
 //----------------------------
 String ssidModem = "KONOHA2";
 String passwordModem = "familiars58";
+
+char* ssidModemChar = "KONOHA2";
+char* passwordModemChar = "familiars58";

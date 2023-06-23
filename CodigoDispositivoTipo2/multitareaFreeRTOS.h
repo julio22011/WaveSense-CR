@@ -177,11 +177,12 @@ void tareaEnviarDatos(void * parameters){
     JsonObject resultadoJsonPru = generarJsonDatosRutinarios();               // prueba con paquete general rutinario
     String mensaje;
     serializeJson(resultadoJsonPru, mensaje);
-    mesh.sendBroadcast( mensaje );
 
-    #if defined(depuracionModoSolitario)
-      sendDataRTDB(mensaje, "PriDis2"); // subir datos a Firebase
-    #endif
+    // Modo mesh:
+    if(activateMesh) mesh.sendBroadcast( mensaje );
+
+    // Modo solitario:
+    if(activateSolitario)sendDataRTDB(mensaje, "PriDis2"); // subir datos a Firebase
     
     //mesh.sendBroadcast( "Hola" );    
     //taskSendMessage.setInterval( random( TASK_SECOND * 1, TASK_SECOND * 3 )); // Establece un intervalo aleatorio de tiempo (cambiado por vTaskDelay())

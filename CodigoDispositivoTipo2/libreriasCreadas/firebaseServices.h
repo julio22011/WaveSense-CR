@@ -6,7 +6,7 @@
 
 #include <Arduino.h>
 #if defined(ESP32) || defined(PICO_RP2040)
-#include <WiFi.h>
+//#include <WiFi.h>
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #endif
@@ -129,6 +129,14 @@ void sendSettingsRTDB(String nodesJson){
 // Funcion para enviar datos
 void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno con los nombres y otro con los valores
 
+  // Deserializar mensaje
+  //---------------------------------------------
+  DeserializationError error = deserializeJson(jsonBufferTh, msg);
+  JsonObject ultimoJsonRecibido = jsonBufferTh.as<JsonObject>();
+  char idText[50];
+  sprintf(idText, "esp32-%d", (int) ultimoJsonRecibido["ID"]); 
+  esp32id = String(idText);
+
   if (Firebase.ready()){
 
     timeAge++; // incrementa la edad del tiempo. La edad es para que cada cierto tiempo se vuelva a solicitar el timestamp al servidor
@@ -171,8 +179,6 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
 
       // Enviar los datos
       //----------------------------------------------
-      DeserializationError error = deserializeJson(jsonBufferTh, msg);
-      JsonObject ultimoJsonRecibido = jsonBufferTh.as<JsonObject>();
 
       FirebaseJson json; // To set and push data with timestamp, requires the JSON data with .sv placeholder
 
@@ -202,7 +208,7 @@ void sendDataRTDB(String msg, String nodesJson){  // recibir dos vectores, uno c
       if(rutaTime != rutaTimeOld){
         FirebaseJson jsonInd;                             // json para crear el indice
         jsonInd.set("created", (String) rutaTimestamp);
-        Serial.printf("IUpdating index... %s\n", Firebase.RTDB.setJSON(&fbdo, rutaInd, &jsonInd) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
+        Serial.printf("Updating index... %s\n", Firebase.RTDB.setJSON(&fbdo, rutaInd, &jsonInd) ? fbdo.to<FirebaseJson>().raw() : fbdo.errorReason().c_str());
         rutaTimeOld = rutaTime;
       }
       // Push data with timestamp
