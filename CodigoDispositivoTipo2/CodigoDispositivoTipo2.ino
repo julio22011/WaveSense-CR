@@ -112,6 +112,7 @@ void crearUI(){
     "Reinicio",
     "Mostrar voltajes",
     "Modo de conexion",
+    "Probar SMS",
     "Informacion"};
   int numDeOpcionesSec = (sizeof(titulosMenuSecundario)/sizeof(titulosMenuSecundario[0])); // determinar la cantidad de elementos
   menuSecundario.configurarMenu(1, numDeOpcionesSec, "Menu 2", titulosMenuSecundario);
@@ -123,9 +124,27 @@ void crearUI(){
   int numDeOpcionesModeConex = (sizeof(titulosMenuModoConex)/sizeof(titulosMenuModoConex[0])); // determinar la cantidad de elementos
   menuModoConex.configurarMenu(2, numDeOpcionesModeConex, "Menu 3", titulosMenuModoConex);
 
+  ///
+  uint32_t chipId;
+  for(int i=0; i<17; i=i+8) {
+    chipId |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
+  }
+  IDdelDispositivo = chipId;
+  // Setear el id del dispositivo
+  char idText[50];
+  sprintf(idText, "esp32-%d", IDdelDispositivo); 
+  String esp32id = String(idText);
+  ///
+  
+  String titulosMenuInfo[] = {
+    esp32id,
+    "Ver: 1.0.0"};
+  int numTitulosMenuInfo = (sizeof(titulosMenuInfo)/sizeof(titulosMenuInfo[0])); // determinar la cantidad de elementos
+  menuInfo.configurarMenu(3, numTitulosMenuInfo, "Info", titulosMenuInfo);
+
   // Asociar los menus creados a la ui:
-  menu todosLosMenus[] = {menuPrincipal, menuSecundario, menuModoConex}; // Vector de los menus
-  ui.asociarMenu(3, todosLosMenus); // numMenus, menus
+  menu todosLosMenus[] = {menuPrincipal, menuSecundario, menuModoConex,menuInfo}; // Vector de los menus
+  ui.asociarMenu(4, todosLosMenus); // numMenus, menus
   //ui.imprimirTitulosDeMenusSerial(); // funcion de depuracion
 
   // Configurar botones:
@@ -221,10 +240,20 @@ bool callBackEjecutarAccionExterna(int menuActual, int opcionActual){
     // ...
     ESP.restart(); // reiniciar para aplicar cambios
   }
+  else if(menuActual == 1 && opcionActual == 3){  // menu 3, opcion 2
+    // Enviar sms de prueba
+    enviarSMSdePrueba();
+    ui.menuActual = 0;
+  }
+  else if(menuActual == 1 && opcionActual == 4){  // menu 3, opcion 2
+    // Mostrar menu de Info
+    ui.menuActual = 3;
+  }
   else if(menuActual == 2 && opcionActual == 1){  // menu 3, opcion 2
     // Activar modo solitario
     // modoSolitario = true;    // activar modo solitario
     // (falta guardar los ajustes en preferencias antes de reiniciar)
-    ESP.restart(); // reiniciar para aplicar cambios
+    activateMesh = true;
+    //ESP.restart(); // reiniciar para aplicar cambios
   }
 }

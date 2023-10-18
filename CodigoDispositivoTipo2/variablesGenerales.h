@@ -42,7 +42,7 @@ Varibles generales para el dispostivo tipo 2 y tipo 3:
 //=====================================================================
 DynamicJsonDocument jsonBufferTh(1024); // Crear instancia para los documentos JSON
 
-bool activateMesh = false;
+bool activateMesh = false;   //false
 bool activateSolitario = true;
 
 //=====================================================================
@@ -72,6 +72,7 @@ UI_OLED ui;          // crear objeto de ui
 menu menuPrincipal;
 menu menuSecundario;
 menu menuModoConex;
+menu menuInfo;
 botones botones;
 
 // Para funciones de red
@@ -94,3 +95,5 @@ bool yendoPosServicio = false;  // variable para evitar iniciar dos veces las mi
 
 #include "multitareaFreeRTOS.h"
 #include "funcionesDeRedMesh.h"
+
+#include "pruebaSMS.h"

@@ -15,6 +15,10 @@
 #define activarAnimacionDePruebaRoller
 //#define activarDepuracionTouch
 
+// Algunas opciones de Configuracion
+//-----------------------------------------------
+#define activarSpBluetooth  // activar el speaker BT y desactivar WiFi (necesita 3 MB de flash)
+
 // Archivo de librerias, variables, objetos y configuracion
 //-----------------------------------------------
 #include "variablesGenerales.h" // ubicar al inicio del programa
@@ -36,6 +40,14 @@
 //-----------------------------------------------   
 #include "cabeceraRTOS.h"
 
+// Para el speaker BT
+//-----------------------------------------------
+#ifdef activarSpBluetooth
+#include "BluetoothA2DPSink.h"
+BluetoothA2DPSink a2dp_sink;
+// FUncion para inciar esta al final del codigo: setupSpeakerBT()
+#endif
+
 void setup() {
   #ifdef borrarNVS
     nvs_flash_erase();
@@ -43,6 +55,10 @@ void setup() {
   #endif
   
   Serial.begin(115200);
+
+  #ifdef activarSpBluetooth
+  setupSpeakerBT(); // funcion para iniciar el altavoz bluetooth
+  #endif
 
   pinMode(fotocelda, INPUT); // de prueba
 
@@ -60,31 +76,34 @@ void setup() {
   setupMCP();                // inicia MCP23017, funcion del archivo "ExpansorDePuertas/ExpansorPuertasInit.h"
   iniciarUART_ESP32_2(5000); // Inicia programa para recibrir datos por Uart de la ESP32 de la red mesh
 
+  // Configurar gestor de mensajes, filtrosData y sensoresData
+  setupDeData();
+
+  #ifndef activarSpBluetooth
+  //---------------
   // Restaurar los datos de red guardados e intentar conectar
   //tryPreviousNetwork();
   preferences.begin("settings"); // iniciar las preferencias
   recuperarContasenaWiFi();
-
-  // Configurar gestor de mensajes, filtrosData y sensoresData
-  setupDeData();
-
   // Iniciar tarea para obtner la fecha y hora
   iniciarFechaHora(10000);
-
-  // Iniciar la memoeria spiffs
-  if(!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)){
-        Serial.println("SPIFFS Mount Failed");   // indica si huo un fallo
-        return;
-  }
-
-  // Iniciar la tarea de los botones
-  iniciarBotones(1024);
 
   // Incio de OTA;l
   AsyncElegantOTA.begin(&server);    // Start ElegantOTA
   Serial.println("OTA por navegador iniciado.");
   Serial.println(WiFi.localIP());
   server.begin();
+  //---------------
+  #endif
+
+  // Iniciar la memoeria spiffs
+  if(!SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED)){
+        Serial.println("SPIFFS Mount Failed");   // indica si hubo un fallo
+        return;
+  }
+
+  // Iniciar la tarea de los botones
+  iniciarBotones(1024);
 
   // Inicio de la interfaz grafica
   ui_init();                 // iniciar interfaz LVGL de SquareLine
@@ -191,3 +210,21 @@ void actulizacionDeHoraUI(){
     //iniciarFechaHora(10000);   
   }
 }
+
+
+//--------------------------------------------------------
+#ifdef activarSpBluetooth
+void setupSpeakerBT() {
+  // Para establecer una configuracion de los pines i2s:
+  i2s_pin_config_t my_pin_config = {
+        .bck_io_num = 27,    // 27      antes 26,
+        .ws_io_num = 26,    //26        antes 25
+        .data_out_num = 25,  // 25 da problemas cambiarlo   antes 27
+        .data_in_num = I2S_PIN_NO_CHANGE
+   };
+   a2dp_sink.set_pin_config(my_pin_config);
+   ///////////////////////////////////
+    
+  a2dp_sink.start("MyMusic");  
+}
+#endif
